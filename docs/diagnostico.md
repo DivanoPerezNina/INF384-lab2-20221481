@@ -51,3 +51,57 @@
 * **Proxy declarado:** **Duración total de ejecución del workflow `pipeline.yml` en GitHub Actions (medido en segundos)**.
 * **Valor actual (Línea Base):** **67.6 segundos en promedio** (rango entre 59s y 75s).
 * **Meta esperada:** Reducir la duración promedio del pipeline por debajo de los **40 segundos** tras implementar la caché, manteniendo las validaciones de calidad activas.
+
+## 4.1 Medición posterior
+
+Después de la intervención, la ejecución del pull request #2 tardó **99 segundos**
+(1m39s). La línea base era de **67.6 segundos** en promedio, calculada a partir
+de las tres ejecuciones registradas en `docs/linea-base.md`.
+
+El tiempo aumentó en **31.4 segundos**, equivalente a aproximadamente **46.4%**
+respecto de la línea base. La ejecución posterior terminó con fallo en el paso
+**Analisis de calidad**, porque el Quality Gate de SonarQube detectó cobertura
+insuficiente sobre código nuevo. Esto confirma que el pipeline sí detiene la
+ejecución cuando el análisis de calidad falla.
+
+Ejecución posterior:
+https://github.com/DivanoPerezNina/INF384-lab2-20221481/actions/runs/34539888011
+
+## 4.2 Justificación de la versión
+
+La versión declarada es **1.3.0**, registrada tanto en `VERSION` como en
+`pyproject.toml`. El valor fue establecido por el commit `ae2b389` (`parte 2
+correccion 1`). El historial que sustenta el estado entregado incluye:
+
+* `a31a0bf`: diagnóstico y trabajo de la Parte 1.
+* `77d2d36` y `ae2b389`: implementación y correcciones de la Parte 2.
+* `d1c1665`: incorporación de `prioridad_pedido` para la Parte 3.
+* `884e9a7`: ejecución del pipeline también en pull requests dirigidos a `main`.
+
+## 4.3 Lo que no se resolvió
+
+El pipeline todavía no publica artefactos cuando se ejecuta sobre un pull request:
+el job `publicar` está condicionado a la rama `main`. Para resolver esta
+limitación habría que definir una política de publicación para PR, por ejemplo
+generar artefactos temporales para revisión sin publicarlos como una versión
+oficial, y agregar controles para evitar que esos artefactos se confundan con
+los de una entrega aprobada.
+
+## 4.4 Declaración de uso de IA generativa
+
+Se utilizaron herramientas de IA generativa como apoyo para completar las Partes
+1, 2 y 3 de este laboratorio. En particular, se utilizó GitHub Copilot para
+entender el código existente, proponer y revisar cambios en el pipeline,
+interpretar resultados de pruebas y cobertura, y redactar parte de la
+documentación. La decisión final sobre los cambios, la ejecución de las
+pruebas, la revisión del historial y la verificación del pull request fueron
+realizadas por el estudiante.
+
+Los prompts utilizados incluyeron solicitudes equivalentes a:
+
+* "Analiza el pipeline de GitHub Actions, identifica sus defectos y propone
+	correcciones justificadas."
+* "Implementa la funcionalidad de la Parte 3 manteniendo el estilo del
+	proyecto y verifica la cobertura de pruebas."
+* "Ayúdame a documentar la línea base, la medición posterior, la versión y las
+	limitaciones del pipeline."
