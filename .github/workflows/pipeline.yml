@@ -39,7 +39,7 @@ jobs:
         with:
           args: >
             -Dsonar.organization=${{ vars.SONAR_ORG }}
-            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            -Dsonar.projectKey=DivanoPerezNina_-INF384-lab2-20221481
             -Dsonar.qualitygate.wait=true
 
   publicar:
