@@ -5,9 +5,9 @@ sin modificar ningun archivo del repositorio. Registrar aqui los resultados.
 
 | Ejecucion | Duracion | URL |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
+| 1 | 1m9s | https://github.com/DivanoPerezNina/INF384-lab2-20221481/actions/runs/34519140183 |
+| 2 | 59s | https://github.com/DivanoPerezNina/INF384-lab2-20221481/actions/runs/34519407210 |
+| 3 | 1m15s | https://github.com/DivanoPerezNina/INF384-lab2-20221481/actions/runs/34519539007 |
 
 ## Declaracion de uso de IA generativa
 
