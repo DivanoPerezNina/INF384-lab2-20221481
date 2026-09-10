@@ -2,6 +2,7 @@ name: pipeline
 
 on:
   push:
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -19,11 +20,12 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
 
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.lock
 
       - name: Ejecutar pruebas
         run: pytest --cov=src --cov-report=xml
@@ -37,9 +39,16 @@ jobs:
           args: >
             -Dsonar.organization=${{ vars.SONAR_ORG }}
             -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }}
+            
+      - name: Detener si no cumple Quality Gate
+        uses: SonarSource/sonarqube-quality-gate-action@v1 
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   publicar:
     name: Publicar artefacto
+    needs: validar
     runs-on: ubuntu-latest
     steps:
       - name: Descargar el codigo
@@ -49,11 +58,15 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+          cache: 'pip'
+
+      - name: Leer version del paquete
+        run: echo "VERSION=$(tr -d ' \t\r\n' < VERSION)" >> $GITHUB_ENV
 
       - name: Instalar dependencias
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements.lock
 
       - name: Construir el paquete
         run: python -m build
@@ -61,6 +74,6 @@ jobs:
       - name: Publicar el paquete
         uses: actions/upload-artifact@v4
         with:
-          name: paquete
+          name: despachos-${{ env.VERSION }}
           path: dist/
           overwrite: true
